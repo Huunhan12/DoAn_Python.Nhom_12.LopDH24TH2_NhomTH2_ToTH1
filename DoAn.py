@@ -19,7 +19,7 @@ center_window(root, 900, 500)
 root.resizable(False, False)
 
 # ====== Tiêu đề ======
-lbl_title = tk.Label(root, text="QUẢN LÝ ĐIỂM SINH VIÊN", font=("Arial", 18, "bold"), fg="#1E88E5")
+lbl_title = tk.Label(root, text="QUẢN LÝ ĐIỂM SINH VIÊN", font=("Arial", 20, "bold"), fg="#1E88E5")
 lbl_title.pack(pady=10)
 
 # ====== Frame nhập thông tin ======
@@ -41,29 +41,29 @@ def capitalize_words(event):
     widget.insert(0, text)
 
 # --- Hàng 1: Mã số, Họ tên ---
-tk.Label(frame_info, text="Mã số sinh viên:").grid(row=0, column=0, padx=5, pady=5, sticky="w")
+tk.Label(frame_info, text="Mã số sinh viên:",font=("Arial", 10, "bold")).grid(row=0, column=0, padx=5, pady=5, sticky="w")
 entry_maso = tk.Entry(frame_info, width=15)
 entry_maso.grid(row=0, column=1, padx=5, pady=5, sticky="w")
 entry_maso.bind("<KeyRelease>", to_uppercase) 
 
-tk.Label(frame_info, text="Họ và tên:").grid(row=0, column=2, padx=5, pady=5, sticky="w")
+tk.Label(frame_info, text="Họ và tên:",font=("Arial", 10, "bold")).grid(row=0, column=2, padx=5, pady=5, sticky="w")
 entry_hoten = tk.Entry(frame_info, width=20)
 entry_hoten.grid(row=0, column=3, padx=5, pady=5, sticky="w")
 entry_hoten.bind("<KeyRelease>", capitalize_words)
 
-tk.Label(frame_info, text="Lớp:").grid(row=0, column=4, padx=10, pady=5, sticky="w")
+tk.Label(frame_info, text="Lớp:",font=("Arial", 10, "bold")).grid(row=0, column=4, padx=10, pady=5, sticky="w")
 entry_lop = tk.Entry(frame_info, width=10)
 entry_lop.grid(row=0, column=5, padx=5, pady=5, sticky="w")
 entry_lop.bind("<KeyRelease>", to_uppercase) 
 
 # --- Hàng 2: Ngày sinh, giới tính, môn học ---
-tk.Label(frame_info, text="Ngày sinh").grid(row=1, column=0, padx=5, pady=5, sticky="w")
+tk.Label(frame_info, text="Ngày sinh: ",font=("Arial", 10, "bold")).grid(row=1, column=0, padx=5, pady=5, sticky="w")
 date_entry = DateEntry(frame_info, width=12, background="darkblue",
                              foreground="white", date_pattern="dd/mm/yyyy")
 date_entry.grid(row=1, column=1, padx=5, pady=5, sticky="w")
 
-tk.Label(frame_info, text="Giới tính:").grid(row=1, column=2, padx=5, pady=5, sticky="w")
-combo_gioitinh = ttk.Combobox(frame_info, values=["Nam", "Nữ"], state="readonly", width=8)
+tk.Label(frame_info, text="Giới tính:",font=("Arial", 10, "bold")).grid(row=1, column=2, padx=5, pady=5, sticky="w")
+combo_gioitinh = ttk.Combobox(frame_info, values=["Nam", "Nữ"], state="readonly", width=17)
 combo_gioitinh.grid(row=1, column=3, padx=5, pady=5, sticky="w")
 combo_gioitinh.current(0)
 
@@ -72,17 +72,17 @@ mon_hoc_list = ["Chuyên đề Python", "Phân tích thiết kế hệ thống t
                 "Quản trị mạng", "Lịch sử Đảng Cộng sản Việt Nam", 
                 "Lý thuyết đồ thị", "Lập trình .NET"]
 
-tk.Label(frame_info, text="Môn học:").grid(row=1, column=4, padx=5, pady=5, sticky="w")
+tk.Label(frame_info, text="Môn học:",font=("Arial", 10, "bold")).grid(row=1, column=4, padx=5, pady=5, sticky="w")
 combo_monhoc = ttk.Combobox(frame_info, values=mon_hoc_list, state="readonly", width=27)
 combo_monhoc.grid(row=1, column=5, padx=5, pady=5, sticky="w")
 combo_monhoc.current(0) 
 
 # --- Hàng 3: Điểm --- 
-tk.Label(frame_info, text="Điểm quá trình:").grid(row=2, column=0, padx=5, pady=5, sticky="w")
-entry_diemqt = tk.Entry(frame_info, width=10)  
+tk.Label(frame_info, text="Điểm quá trình:",font=("Arial", 10, "bold")).grid(row=2, column=0, padx=5, pady=5, sticky="w")
+entry_diemqt = tk.Entry(frame_info, width=15)  
 entry_diemqt.grid(row=2, column=1, padx=5, pady=5, sticky="w")
-tk.Label(frame_info, text="Điểm thi:").grid(row=2, column=2, padx=5, pady=5, sticky="w")
-entry_diemthi = tk.Entry(frame_info, width=10)
+tk.Label(frame_info, text="Điểm thi:",font=("Arial", 10, "bold")).grid(row=2, column=2, padx=5, pady=5, sticky="w")
+entry_diemthi = tk.Entry(frame_info, width=20)
 entry_diemthi.grid(row=2, column=3, padx=5, pady=5, sticky="w")
 
 
@@ -352,6 +352,8 @@ def open_search_window():
                 e.insert(0, str(val))
                 e.grid(row=i, column=1, padx=10, pady=5)
                 entries[lbl] = e
+                if lbl == "Họ và tên":
+                    e.bind("<KeyRelease>", capitalize_words)
             else:
                 # Dùng Label để hiển thị thông tin không sửa (Mã số, Lớp, Ngày sinh, Môn học)
                 tk.Label(edit_win, text=str(val), width=30, anchor="w").grid(row=i, column=1, padx=10, pady=5, sticky="w")
@@ -364,7 +366,7 @@ def open_search_window():
             
             try:
                 # 1. Lấy giá trị mới
-                new_hoten = entries["Họ và tên"].get().strip()
+                new_hoten = entries["Họ và tên"].get().strip().title() # Dùng .title() để đảm bảo
                 diemqt = float(entries["Điểm quá trình"].get())
                 diemthi = float(entries["Điểm thi"].get())
                 
@@ -423,10 +425,10 @@ def open_search_window():
     frame_buttons_search = tk.Frame(search_win)
     frame_buttons_search.pack(pady=5)
 
-    tk.Button(frame_buttons_search, text="Sửa thông tin", width=15, bg="#FF0000", fg="white",
+    tk.Button(frame_buttons_search, text="Sửa thông tin", width=15, bg="#FF2B2B", fg="white",
               font=("Arial", 10, "bold"), command=edit_student).grid(row=0, column=0, padx=10)
 
-    tk.Button(frame_buttons_search, text="Thoát", width=15, bg="#D90000", fg="white",
+    tk.Button(frame_buttons_search, text="Thoát", width=15, bg="#FF2B2B", fg="white",
               font=("Arial", 10, "bold"), command=search_win.destroy).grid(row=0, column=1, padx=10)
     
 #--- Nút Tìm kiếm ở cửa sổ chính---
