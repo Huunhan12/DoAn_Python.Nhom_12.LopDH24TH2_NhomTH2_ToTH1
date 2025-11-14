@@ -1,18 +1,21 @@
+"""LienKet.py
+Module này chứa hàm kết nối đến cơ sở dữ liệu MySQL.
+Chứa hàm connect_db() để thiết lập kết nối.
+Nó sư dụng thư viên mysql.connector để kết nối MySQL.
+"""
 import mysql.connector
 from tkinter import messagebox
 
 # ====== Kết nối MySQL (MySQL Connection) ======
 def connect_db():
     """
-    Thiết lập kết nối đến cơ sở dữ liệu QL_DiemSV.
-    
-    LƯU Ý: Thay đổi user và password nếu cần thiết.
+        Thiết lập kết nối đến cơ sở dữ liệu QL_DiemSV.
     """
     try:
         conn = mysql.connector.connect(
             host="localhost",
-            user="root",        # Thay bằng user MySQL của bạn
-            password="123456",  # Thay bằng password MySQL của bạn
+            user="root",        # Thay bằng user MySQL 
+            password="123456",  # Thay bằng password MySQL 
             database="QL_DiemSV"
         )
         return conn

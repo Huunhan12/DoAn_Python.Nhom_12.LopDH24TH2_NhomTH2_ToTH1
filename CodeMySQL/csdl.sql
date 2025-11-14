@@ -1,1 +1,0 @@
-SELECT * FROM ql_diemsv.sinhvien;
