@@ -149,7 +149,7 @@ def open_search_window(root, connect_db_func, search_student_func, edit_student_
         # Mở cửa sổ sửa thông tin sinh viên
         edit_win = tk.Toplevel(search_win)
         edit_win.title("Sửa thông tin sinh viên")
-        edit_win.geometry("400x400")
+        center_window(edit_win, 400,400)
         edit_win.grab_set()
 
         labels = ["Mã số", "Họ và tên", "Lớp", "Ngày sinh", "Môn học", "Điểm quá trình", "Điểm thi"]
