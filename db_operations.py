@@ -191,3 +191,74 @@ def edit_student_db(maso_goc, monhoc_goc, new_hoten, diemqt, diemthi):
         if conn and conn.is_connected():
             cursor.close()
             conn.close()
+# ====== Xuất File Excel (Đã sửa đổi để nhóm dữ liệu) ======
+def export_to_excel():
+    """Lấy tất cả dữ liệu từ DB, nhóm theo sinh viên và xuất ra file Excel."""
+    conn = connect_db()
+    if conn is None: return False
+        
+    try:
+        # Lấy tất cả dữ liệu gốc
+        sql = """
+        SELECT 
+            SV.MaSV, SV.HoTen, SV.Lop, SV.NgaySinh, 
+            D.TenMon, D.DiemQT, D.DiemThi, ROUND((D.DiemQT + D.DiemThi) / 2, 2) AS DiemTB
+        FROM SINHVIEN AS SV
+        JOIN DIEM AS D ON SV.MaSV = D.MaSV
+        ORDER BY SV.MaSV, D.TenMon
+        """
+        
+        # Đọc dữ liệu từ SQL vào DataFrame
+        df_full = pd.read_sql(sql, conn)
+        
+        # Đổi tên cột
+        df_full.columns = ["Mã số", "Họ và tên", "Lớp", "Ngày sinh", "Môn học", 
+                           "Điểm quá trình", "Điểm thi", "Điểm TB"]
+
+        # Định dạng lại ngày sinh
+        df_full['Ngày sinh'] = pd.to_datetime(df_full['Ngày sinh']).dt.strftime('%d/%m/%Y')
+
+        
+        # --- LOGIC NHÓM DỮ LIỆU ĐỂ GIỐNG EXCEL ---
+        
+        # Xác định các cột thông tin sinh viên cần nhóm (columns to keep only on the first row)
+        info_cols = ["Mã số", "Họ và tên", "Lớp", "Ngày sinh"]
+        
+        # Tạo một cột tạm để đánh dấu khi Mã số thay đổi
+        # np.where sẽ kiểm tra nếu 'Mã số' khác với 'Mã số' của hàng trước đó
+        is_first = df_full['Mã số'] != df_full['Mã số'].shift(1)
+        
+        # Lặp qua từng cột thông tin sinh viên
+        for col in info_cols:
+            # Thay thế giá trị của các cột thông tin sinh viên bằng NaN (trống) 
+            # nếu đó KHÔNG phải là hàng đầu tiên của sinh viên đó.
+            df_full.loc[~is_first, col] = np.nan 
+        
+        # Đặt lại thứ tự cột để cột Mã số và Họ và tên hiển thị ở đầu
+        # Tuy nhiên, ta giữ nguyên thứ tự 8 cột để khớp với yêu cầu.
+        df_export = df_full
+        
+        # Xử lý các giá trị NaN để chúng không xuất hiện là 'nan' trong Excel
+        # Thay thế NaN bằng chuỗi rỗng
+        df_export = df_export.fillna('') 
+        
+        # --- Xuất ra file Excel ---
+        
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        file_name = f"QuanLyDiemSV_LuuLuc_{timestamp}.xlsx"
+        
+        # Xuất ra file Excel
+        df_export.to_excel(file_name, index=False, sheet_name="Dữ liệu điểm")
+        
+        messagebox.showinfo("Thành công", f"Đã xuất dữ liệu thành công ra file:\n{file_name}")
+        return True
+    
+    except ImportError:
+        messagebox.showerror("Lỗi Thư viện", "Vui lòng cài đặt thư viện pandas và openpyxl:\npip install pandas openpyxl")
+        return False
+    except Exception as e:
+        messagebox.showerror("Lỗi Xuất File", f"Đã xảy ra lỗi khi xuất file Excel: {e}")
+        return False
+    finally:
+        if conn and conn.is_connected():
+            conn.close()

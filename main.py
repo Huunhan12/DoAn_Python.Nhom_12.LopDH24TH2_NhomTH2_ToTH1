@@ -11,7 +11,8 @@ from db_operations import (
     add_record_to_db, 
     delete_record_from_db,
     search_student_db,
-    edit_student_db
+    edit_student_db,
+    export_to_excel
 )
 from LienKet import connect_db # Chỉ cần connect_db để truyền vào hàm tìm kiếm
 
@@ -22,7 +23,7 @@ center_window(root, 900, 500)
 root.resizable(False, False)
 
 # ====== TIÊU ĐỀ và FRAME NHẬP THÔNG TIN (Giữ nguyên) ======
-lbl_title = tk.Label(root, text="QUẢN LÝ ĐIỂM SINH VIÊN", font=("Arial", 20, "bold"), fg="#1E88E5")
+lbl_title = tk.Label(root, text="QUẢN LÝ ĐIỂM SINH VIÊN", font=("Arial", 20, "bold"), fg="#379FFA",)
 lbl_title.pack(pady=10)
 
 frame_info = tk.Frame(root)
@@ -167,6 +168,10 @@ def open_search():
 
 btn_search = tk.Button(frame_buttons, text="Tìm kiếm/Sửa", width=12, bg="#9C27B0", fg="white", font=("Arial", 10, "bold"), command=open_search)
 btn_search.grid(row=0, column=4, padx=10)
+# --- Nút Xuất Excel ---
+# Dùng hàm export_to_excel đã định nghĩa trong db_operations.py
+btn_export = tk.Button(frame_buttons, text="Xuất Excel", command=export_to_excel, width=12, bg="#2196F3", fg="white", font=("Arial", 10, "bold"))
+btn_export.grid(row=0, column=5, padx=10) # Đặt ở cột 5, sau nút Tìm kiếm/Sửa (cột 4)
 
 
 # ====== Frame bảng hiển thị ======
@@ -176,9 +181,11 @@ frame_table.pack(pady=10, padx=10, fill='both', expand=True)
 scrollbar_y = ttk.Scrollbar(frame_table, orient="vertical")
 scrollbar_x = ttk.Scrollbar(frame_table, orient="horizontal")
 
+
 # --- Bảng Treeview (Khởi tạo) ---
 columns = ("Mã số", "Họ và tên", "Lớp", "Ngày sinh", "Môn học", "Điểm quá trình", "Điểm thi", "Điểm TB")
 tree = ttk.Treeview(frame_table, columns=columns, show='headings', height=15)
+
 
 for col in columns:
     tree.heading(col, text=col.title())
